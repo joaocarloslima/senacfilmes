@@ -1,8 +1,27 @@
+"use client"
+import Card from '@/components/card'
+import Titulo from '@/components/titulo'
 import Image from 'next/image'
+import { useState } from 'react';
 
 export default function Home() {
+  const [filmes, setFilmes] = useState([])
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTkyMjY2NzQ4MWFiMjA3ZDY0MjQ1MGIwZWZiNDYxZSIsInN1YiI6IjVlYTA5ZTZiYmU0YjM2MDAxYzU5NWExNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Vhu0pPCiIwmtrpyOHdBlQid8HJJllaHthn1MERS_ANg'
+    }
+  };
+  
+  fetch('https://api.themoviedb.org/3/trending/movie/week?language=pt-BR', options)
+    .then(response => response.json())
+    .then(response => setFilmes(response.results))
+    .catch(err => console.error(err));
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex min-h-screen flex-col">
       <nav className="flex gap-4 justify-between items-end bg-slate-700 w-full p-3">
         <h1 className='flex items-center gap-2 text-5xl text-amber-400 font-bold uppercase'>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12">
@@ -12,6 +31,16 @@ export default function Home() {
         </h1>
         <a href="/sobre">Sobre</a>
       </nav>
+
+      <Titulo>filmes em alta</Titulo>
+      <section className='flex flex-wrap gap-4 p-4'>
+        {filmes && filmes.map(filme => <Card filme={filme} /> ) }
+        
+      </section>
+
+      <Titulo>séries em alta</Titulo>
+      <Titulo>lançamentos</Titulo>
+      
     </main>
   )
 }
